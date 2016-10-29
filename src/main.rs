@@ -47,6 +47,12 @@ fn main() {
   	ifstatements();
   	loops();
   	vectors();
+  	let mut v1 = vec![1,1,1];
+  	let mut v2 = vec![1,1,1];
+  	println!("v1[2] = {} , v2[2] = {}",v1[2],v2[2]);
+  	testBorrow(&mut v1, &mut v2);
+  	println!("v1[2] = {} , v2[2] = {}",v1[2],v2[2]);
+
 }
 
 
@@ -174,3 +180,71 @@ fn vectors(){
 	ownership (will be discussed next).
 	*/
 }
+
+
+/*One of the most useful features of Rust is the concept of ownership. This is how Rust achieves memory safety.
+The basic gist is as follows. If you have an object of a type that does not support the copy trait then the 
+following line of code would leave v unusable:
+
+let v = vec![1,2,3,4,5];
+let v2 = v;
+
+here v2 would have ownership over our funny little vector and v would have been left dead. This is to stop dataraces
+from happening. This is crucial behaviour in Rust. Types such as bool and i32 have the copy trait which allows
+the above assignment to work, but what happens over the hood is that v2 receives ownership of a COPY of v while
+v retain the ownership of the original copy. Naturally we can move ownership back and forth like:
+
+let v = vec![1,2,3,4,5];
+let v2 = v;
+let v = v2;
+
+However this gets cumbersome and hence has another very important feature called borrowing.
+
+Borrowing is handled using references (much like pointers). Consider the following code:
+
+fn doStuff(v1: Vec<i32>, v2: Vec<i32>){
+	do stuff here.
+}
+
+If the above function is given two vectors it gains ownership over them as we've seen earlier. However, we can
+pass references to the vectors as follows without taking away ownership:
+
+fn doStuff(v1: &Vec<i32>, v2: &Vec<i32>){
+	do stuff here.
+}
+
+This is called borrowing. However these references are unmutable meaning that we can't actually change the two
+vectors in any way, just look at them. Naturally there are exceptions to this, namely the &mut refrence. Consider
+the following code:
+
+fn doStuff(v1: &mut vec<i32>, v2: &mut vec<i32>){
+	do stuff here.
+}
+
+Here we can actually change the values in the two vectors. The bellow code does just this:
+
+*/
+
+
+fn testBorrow(v1: &mut Vec<i32>, v2: &mut Vec<i32>){
+	v1[2] = 2;
+	v2[2] = 2;
+}
+
+
+/*
+
+There are rules to follow when making use of references and mutable references: you can either have 
+
+1) one more more references (using the normal "&" marking; ex: &Vec<i32>) to a resource.
+OR
+2) you can have exactly one mutable reference (using "&mut" marking; ex: &mut Vec<i32>) to a resource.
+
+Essentially this means that you can have an arbitrary number of references that are read only but ever only one
+reference if that reference can both read and write. 
+
+Another important rule is that the scope of the borrow must not be greater than the scope of the owner.
+Borrowing is tied to the scope and as such when we borrow the borrow last until the end of the scope it
+is borrowed in.
+
+*/
