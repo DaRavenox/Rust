@@ -44,7 +44,9 @@ fn main() {
   	println!("q as math_subtract {:?}",g(x,3));
 
   	primitive_types();
-
+  	ifstatements();
+  	loops();
+  	vectors();
 }
 
 
@@ -98,4 +100,77 @@ fn primitive_types(){
 
 	let slicedx = &x[5..20]; // we have taken a piece of x. 
 	println!("we have now sliced a piece of x {:?}",slicedx[5] );
+}
+
+
+fn ifstatements(){
+	let x = 1;
+
+	if x==1 {
+		println!("We are in an if-statement yay");
+	}
+
+	let y = if x==1 {
+		10
+	}
+	else {
+		5
+	};
+	println!("here is y after magic {}", y);
+}
+
+fn loops(){
+
+	let mut i = 0;
+	loop{
+		println!("Will loop forever. However will break now");
+		i += 1;
+		if i>2 {
+			break;
+		}
+	}
+
+	while i<4 {
+		println!("We are in the while loop");
+		i += 1;
+	}	
+
+	for x in 0..4 {
+		println!("We loop 4 times, currently on iteration {}",x );
+	}
+
+	for (ind,val) in (5..8).enumerate() {
+		println!("We enumerate over elements, iteration is {}, value is {}",ind, val);
+	}
+
+	'outer:for x in 0..4 {
+		'inner:for y in 0..5 {
+			if x+y>3 {
+				println!("We continue to the outer loop");
+				continue 'outer;
+			}
+			if y % 2 == 0 {
+				println!("We continue to the inner loop");
+				continue 'inner;
+			}
+			println!("Yay we managed to get to an odd y for which x+y is smaller than 4, the y is {}",y);
+		}
+	}
+
+}
+
+
+fn vectors(){
+	let v = vec![2,3,4,5];
+	println!("Third element is {}",v[2]);
+	//vectors must be indexed with the usize type, that is i32s don't work, but rather usize;
+	//We can iterate over vectors:
+	for i in &v {
+		println!("We are iterating, currently on element {:?} ",i );
+	}
+
+	/* the above iteration uses a reference to the vector. We can "take ownership" of it by 
+	writing for i in v {} but then we couldn't iterate over v a second time, since we have already taken 
+	ownership (will be discussed next).
+	*/
 }
