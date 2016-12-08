@@ -10,7 +10,7 @@ fn main() {
   		println!("{}",x); //we use the block to shadow the value of x;
 
   	}
-
+  	
   	println!("{:?}",x ); // x is back to 5;
 
   	{
@@ -245,6 +245,6 @@ reference if that reference can both read and write.
 
 Another important rule is that the scope of the borrow must not be greater than the scope of the owner.
 Borrowing is tied to the scope and as such when we borrow the borrow last until the end of the scope it
-is borrowed in.
+is borrowed in. This means that 
 
 */
